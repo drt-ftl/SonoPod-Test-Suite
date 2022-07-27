@@ -1,0 +1,7 @@
+TRYING,http://:8000/api/volume/usb_control_enabled/true/, 
+TRYING,http://172.23.23.2:8000/api/volume/usb_control_enabled/false/, 
+TRYING,http://172.23.23.2:8000/api/volume/usb_control_enabled/true/, 
+TRYING,http://172.23.23.2:8000/api/volume/mute/false/, 
+TRYING,http://172.23.23.2:8000/api/volume/usb_control_enabled/false/, 
+TRYING,http://172.23.23.2:8000/api/volume/mute/false/, 
+TRYING,http://172.23.23.2:8000/api/volume/usb_control_enabled/true/, 

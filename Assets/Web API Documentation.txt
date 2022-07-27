@@ -1,0 +1,73 @@
+The following is the documentation for controlling SonoLoop through the Web API:
+
+Prepend the following paths with "http://192.168.10.214:8000/". It would probably be best to have that configurable somewhere that isn't visible to the user.
+
+You can easily test these URLs by typing them into a web browser address, though some have "no content" responses which will appear to do nothing in the web browser.
+
+Unless otherwise noted, all get URLs return a JSON object with the current value listed under the key named 'value'. 
+
+/api/mic_spl/
+	Returns a JSON object with 2 values, 'current' and 'max'. The 'current' value is what you want (I think... can double check with Pete)
+
+/api/calibration/mode/
+	Gets the current calibration mode
+
+/api/calibration/mode/<str:mode>/
+	Sets the current calubration mode to one of the following options (case sensitive):
+		Pink%20Noise
+		Pure%20Tone
+		Warble%20Tone
+
+/api/volume/usb_control_enabled/
+	Gets the current state of the volume usb control
+
+/api/volume/usb_control_enabled/<str:value>/
+	Set value to "false" do ignore Windows volume control, "true" to enable it.
+
+/api/volume/mute/
+	Gets the current mute value.
+
+/api/volume/mute/<str:value>/
+	Sets the current mute value ("true" or "false"). An HTTP error 409 occurs if usb_control_enabled is true.
+
+/api/volume/value/
+	Gets the current volume value.
+
+/api/volume/value/<int:value>/
+	Sets the current volume value. An HTTP error 409 occurs if usb_control_enabled is true. The value is an attenuation (attn) value, such that:
+		attn (dB) = (0xFF - value) * 0.375
+	E.G: 
+		0xFF = 0 dB
+		0xFE = -0.375 dB
+		0xFD = -0.375 * (0xFF - 0xFD) = -0.75 dB
+		...
+		0x00 = -0.375 * (0xFF - 0x00) = -95.625 dB
+		
+	Now, remember that these are dB but NOT dB SPL. So, set the volume to a reasonable level (probably not max...) and measure the SPL with the mic in the center of the loop. Then, 
+	find the difference in dB between the measured and target values. Apply this offset using the attn conversion above.
+	E.G.:
+		Known:
+			Test Level: 0xF0				( /api/volume/value/ )
+			Target SPL: 80 dB
+			Measured SPL: 90 dB				( Either current or max from /api/mic_spl/ - ask Pete)
+		Calculated:
+			dB diff = (Target - Measured) = (90 - 80) = -10dB
+			value diff = -10dB / 0.375 = 26
+			Corrected Level = 0xF0 - 26 = 0xD6			
+		
+	Conversion from a Windows volume level is a bit more difficult, but not too bad. I don't think this calculation will be necessary but are included for reference (but have not been veriified). Note that windows only uses a part of the above range, otherwise the volume control would be too sensitive. There's also some rounding involved, so these might not be exactly correct.
+		100% Windows volume = 0xFF or 0 dB attn)
+		50% Windows volume = 0xA5 or (0xFF - 0xA5) * 0.375 = -33.75dB
+		0% Windows volume = 0x4B or (0xFF - 0x4B) * 0.375 = -67.5dB
+
+
+
+Make sure you're still playing the audio when you read the spl, that's the important thing. So order of ops is:
+
+1. Disable Windows vol control
+2. set the mute endpoint to false just in case someone mutes the Windows sound
+3. start audio
+4. delay 1s
+5. read SPL
+6. stop audio
+7. make volume adjustment
