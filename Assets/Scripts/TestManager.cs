@@ -96,6 +96,10 @@ public class TestManager : MonoBehaviour
                 Clips.Add(SonoLoopManager.instance.WarbleClips);
                 Clips.Add(SonoLoopManager.instance.PureToneClips);
                 break;
+            case SonoLoopManager.SonoLoopTestType.PulsedWarble:
+                Clips.Add(SonoLoopManager.instance.PulsedWarbleClips);
+                Clips.Add(SonoLoopManager.instance.PureToneClips);
+                break;
             case SonoLoopManager.SonoLoopTestType.SpeechReceptionThreshold:
                 Clips.Add(SonoLoopManager.instance.TwoSyllableClips);
                 Clips.Add(SonoLoopManager.instance.TwoSyllableClips);
@@ -176,9 +180,6 @@ public class TestManager : MonoBehaviour
             || TestType == SonoLoopManager.SonoLoopTestType.Free))
             CtrlDown = true;
         else CtrlDown = false;
-
-        if (Input.GetKey(KeyCode.B))
-            ToggleBackground(true);
     }
     public void TestManager_PlayPause_Event()
     {
@@ -186,11 +187,6 @@ public class TestManager : MonoBehaviour
         var handler = PlayPauseClip_Handler;
         if (handler != null)
             handler(typeof(SpeakerManager), EventArgs.Empty);
-    }
-    public void ToggleBackground (bool _turnOn)
-    {
-        if (SpeakerManagers.Count < 3) return;
-        SpeakerManagers[2].ToggleSpeakers(_turnOn);        
     }
     public void StopPlayingAll()
     {
@@ -204,8 +200,8 @@ public class TestManager : MonoBehaviour
     {
         switch (TestType)
         {
-
             case SonoLoopManager.SonoLoopTestType.HearingThreshold_WT:
+            case SonoLoopManager.SonoLoopTestType.PulsedWarble:
             case SonoLoopManager.SonoLoopTestType.HearingThreshold_PT:
             case SonoLoopManager.SonoLoopTestType.SpeechReceptionThreshold:
                 if (ringIndex == 0)
@@ -271,40 +267,48 @@ public class TestManager : MonoBehaviour
                 SpeakerManagers[0].Clips = SonoLoopManager.instance.QuickSINClips_Noise;
                 testTypePrimary = SonoLoopManager.SonoLoopTestType.QuickSIN;
                 break;
+            case 5:
+                SpeakerManagers[0].Clips = SonoLoopManager.instance.PulsedWarbleClips;
+                testTypePrimary = SonoLoopManager.SonoLoopTestType.PulsedWarble;
+                break;
             default:
                 SpeakerManagers[0].Clips = SonoLoopManager.instance.PureToneClips;
                 testTypePrimary = SonoLoopManager.SonoLoopTestType.HearingThreshold_PT;
                 break;
 
         }
-        switch (secondaryDropdown.value)
-        {
-            case 0:
-                SpeakerManagers[1].Clips = SonoLoopManager.instance.PureToneClips;
-                testTypeSecondary = SonoLoopManager.SonoLoopTestType.HearingThreshold_PT;
-                break;
-            case 1:
-                SpeakerManagers[1].Clips = SonoLoopManager.instance.WarbleClips;
-                testTypeSecondary = SonoLoopManager.SonoLoopTestType.HearingThreshold_WT;
-                break;
-            case 2:
-                SpeakerManagers[1].Clips = SonoLoopManager.instance.SentenceClips;
-                testTypeSecondary = SonoLoopManager.SonoLoopTestType.QuickSIN;
-                break;
-            case 3:
-                SpeakerManagers[1].Clips = SonoLoopManager.instance.TwoSyllableClips;
-                testTypeSecondary = SonoLoopManager.SonoLoopTestType.SpeechReceptionThreshold;
-                break;
-            case 4:
-                SpeakerManagers[1].Clips = SonoLoopManager.instance.QuickSINClips_Noise;
-                testTypeSecondary = SonoLoopManager.SonoLoopTestType.QuickSIN;
-                break;
-            default:
-                SpeakerManagers[1].Clips = SonoLoopManager.instance.QuickSINClips_Noise;
-                testTypeSecondary = SonoLoopManager.SonoLoopTestType.QuickSIN;
-                break;
+        //switch (secondaryDropdown.value)
+        //{
+        //    case 0:
+        //        SpeakerManagers[1].Clips = SonoLoopManager.instance.PureToneClips;
+        //        testTypeSecondary = SonoLoopManager.SonoLoopTestType.HearingThreshold_PT;
+        //        break;
+        //    case 1:
+        //        SpeakerManagers[1].Clips = SonoLoopManager.instance.WarbleClips;
+        //        testTypeSecondary = SonoLoopManager.SonoLoopTestType.HearingThreshold_WT;
+        //        break;
+        //    case 2:
+        //        SpeakerManagers[1].Clips = SonoLoopManager.instance.SentenceClips;
+        //        testTypeSecondary = SonoLoopManager.SonoLoopTestType.QuickSIN;
+        //        break;
+        //    case 3:
+        //        SpeakerManagers[1].Clips = SonoLoopManager.instance.TwoSyllableClips;
+        //        testTypeSecondary = SonoLoopManager.SonoLoopTestType.SpeechReceptionThreshold;
+        //        break;
+        //    case 4:
+        //        SpeakerManagers[1].Clips = SonoLoopManager.instance.FREE_BG_Clips;
+        //        testTypeSecondary = SonoLoopManager.SonoLoopTestType.QuickSIN;
+        //        break;
+        //    case 5:
+        //        SpeakerManagers[1].Clips = SonoLoopManager.instance.PulsedWarbleClips;
+        //        testTypeSecondary = SonoLoopManager.SonoLoopTestType.QuickSIN;
+        //        break;
+        //    default:
+        //        SpeakerManagers[1].Clips = SonoLoopManager.instance.QuickSINClips_Noise;
+        //        testTypeSecondary = SonoLoopManager.SonoLoopTestType.QuickSIN;
+        //        break;
 
-        }
+        //}
         FreeCaliTypePrimary = GetCaliType(testTypePrimary);
         FreeCaliTypeSecondary = GetCaliType(testTypeSecondary);
         if (TestType != SonoLoopManager.SonoLoopTestType.Free)
@@ -317,6 +321,15 @@ public class TestManager : MonoBehaviour
         {
             SpeakerManagers[i].StopPlaying();
             SpeakerManagers[i].ChangeClip(0);
+
+            SpeakerManagers[1].Clips = SonoLoopManager.instance.FREE_BG_Clips; 
+            SpeakerManagers[1].speakerManagerSource.loop = true;
+            foreach (var s in SpeakerManagers[1].Speakers)
+            {
+                s.Value.audioSource.loop = true;
+                s.Value.audioSource.Play();
+            }
+            SpeakerManagers[1].PlayOnce_Event();
         }
         //#if UNITY_EDITOR
         //#else
@@ -367,6 +380,7 @@ public class TestManager : MonoBehaviour
             case SonoLoopManager.SonoLoopTestType.FreeFieldLocalization:
             case SonoLoopManager.SonoLoopTestType.HearingThreshold_PT:
                 return SonoLoopManager.CalibrationType.PureTone;
+            case SonoLoopManager.SonoLoopTestType.PulsedWarble:
             case SonoLoopManager.SonoLoopTestType.HearingThreshold_WT:
                 return SonoLoopManager.CalibrationType.WarbleTone;
             case SonoLoopManager.SonoLoopTestType.QuickSIN:

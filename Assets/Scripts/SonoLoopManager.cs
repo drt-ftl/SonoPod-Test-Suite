@@ -7,6 +7,7 @@ using TMPro;
 public class SonoLoopManager : MonoBehaviour
 {
     public List<AudioClip> WarbleClips;
+    public List<AudioClip> PulsedWarbleClips;
     public List<AudioClip> PureToneClips;
     public List<AudioClip> SentenceClips;
     public List<AudioClip> TwoSyllableClips;
@@ -15,6 +16,7 @@ public class SonoLoopManager : MonoBehaviour
     public List<AudioClip> HINTClips_Primary;
     public List<AudioClip> HINTClips_Noise;
     public List<AudioClip> CrowdClips;
+    public List<AudioClip> FREE_BG_Clips;
     public AudioClip crowdNoise;
     public AudioClip PN_Test;
     public AudioClip PT_Test;
@@ -32,7 +34,7 @@ public class SonoLoopManager : MonoBehaviour
     public Dictionary<CalibrationType, int> AttenuationValues = new Dictionary<CalibrationType, int>();
 
     public static SonoLoopManager instance;
-    public enum SonoLoopTestType { HearingThreshold_PT, HearingThreshold_WT, SpeechReceptionThreshold, QuickSIN, FreeFieldLocalization, Free, HINT, Calibration }
+    public enum SonoLoopTestType { HearingThreshold_PT, HearingThreshold_WT, PulsedWarble, SpeechReceptionThreshold, QuickSIN, FreeFieldLocalization, Free, HINT, Calibration }
     public enum SpeakerPosition { FL, FR, SL, SR, CEN, SW, SBL, SBR, NONE }
     //public enum SpeakerRole { Primary, Secondary, Background, None}
     public SonoLoopTestType TestType { get; internal set; }
@@ -64,6 +66,7 @@ public class SonoLoopManager : MonoBehaviour
         calibrationClips.Add(CalibrationType.QuickSIN, SonoLoopManager.instance.QuickSIN_Test);
         calibrationClips.Add(CalibrationType.PureTone, SonoLoopManager.instance.PT_Test);
         calibrationClips.Add(CalibrationType.WarbleTone, SonoLoopManager.instance.WT_Test);
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
         calibrationClips.Add(CalibrationType.Complete, SonoLoopManager.instance.completeClip);
         calibrationClips.Add(CalibrationType.Warning, SonoLoopManager.instance.warningClip);
         settingsFilename = Application.dataPath + "/sonoLoopSettings.txt";

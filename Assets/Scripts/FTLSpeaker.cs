@@ -16,6 +16,7 @@ public class FtlSpeaker : MonoBehaviour
     public EventHandler FTLSpeaker_PlayPause_Handler;
     public bool isOn { get; internal set; }
 
+
     public void InitializeSpeaker_Event(SpeakerManager _speakerManager)
     {
         speakerManager = _speakerManager;
@@ -60,6 +61,7 @@ public class FtlSpeaker : MonoBehaviour
         {
             case SonoLoopManager.SonoLoopTestType.HearingThreshold_PT:
             case SonoLoopManager.SonoLoopTestType.HearingThreshold_WT:
+            case SonoLoopManager.SonoLoopTestType.PulsedWarble:
             case SonoLoopManager.SonoLoopTestType.SpeechReceptionThreshold:
             case SonoLoopManager.SonoLoopTestType.Calibration:
                 limit = 5f;
@@ -70,14 +72,26 @@ public class FtlSpeaker : MonoBehaviour
             case SonoLoopManager.SonoLoopTestType.QuickSIN:
                 limit = 9f;
                 break;
+            case SonoLoopManager.SonoLoopTestType.Free:
+                limit = 5f;
+                if (speakerManager.RingIndex == 1)
+                    limit = 1000;
+                break;
             default:
                 break;
         }
         if (Time.realtimeSinceStartup - timeClipStarted > limit)
         {
             timeClipStarted = float.MaxValue;
-            audioSource.Stop();
-            isPlaying = false;
+
+            if (!audioSource.loop)
+            {
+                if (!speakerManager.speakerManagerSource.loop)
+                {
+                    audioSource.Stop();
+                    isPlaying = false;
+                }
+            }
             if (TestManager.instance != null)
                 TestManager.instance.isPaused = true;
             if (ControlPad.instance != null)
@@ -112,27 +126,11 @@ public class FtlSpeaker : MonoBehaviour
     }
     private void TestManager_PlayPauseClip(object sender, System.EventArgs e)
     {
+        if (audioSource.loop) return;
         if (audioSource == null) return;
         if (!isOn)   return;
         if (speakerManager.CurrentPosition != Position) return; //audioSource.volume = 0; 
         StartCoroutine(WaitAndPlay());
-        //if (!audioSource.isPlaying)
-        //{
-        //    audioSource.Play();
-        //    timeClipStarted = Time.realtimeSinceStartup;
-        //    timeSpentPaused = 0;
-        //    isPlaying = true;
-        //}
-        //if (TestManager.instance.isPaused)
-        //{
-        //    audioSource.Pause();
-        //    timePauseStarted = Time.realtimeSinceStartup;
-        //}
-        //else
-        //{
-        //    audioSource.UnPause();
-        //    timeSpentPaused = Time.realtimeSinceStartup - timePauseStarted;
-        //}
     }
     IEnumerator WaitAndPlay()
     {
@@ -151,7 +149,10 @@ public class FtlSpeaker : MonoBehaviour
         }
         if (TestManager.instance.isPaused)
         {
-            audioSource.Pause();
+            if (!(TestManager.instance.TestType == SonoLoopManager.SonoLoopTestType.Free && speakerManager.RingIndex == 1))
+            {
+                audioSource.Pause();
+            }
             timePauseStarted = Time.realtimeSinceStartup;
         }
         else

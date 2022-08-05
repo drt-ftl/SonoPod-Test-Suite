@@ -4,4 +4,16 @@ TRYING,http://172.23.23.2:8000/api/volume/usb_control_enabled/true/,
 TRYING,http://172.23.23.2:8000/api/volume/mute/false/, 
 TRYING,http://172.23.23.2:8000/api/volume/usb_control_enabled/false/, 
 TRYING,http://172.23.23.2:8000/api/volume/mute/false/, 
+TRYING,http://172.23.23.2:8000/api/calibration/mode/Pure%20Tone, 
+TRYING,http://172.23.23.2:8000/api/calibration/mode/Pure%20Tone, 
+TRYING,http://172.23.23.2:8000/api/calibration/mode/Warble%20Tone, 
+FAIL,http://172.23.23.2:8000/api/volume/usb_control_enabled/false/,PinkNoise
+FAIL,http://172.23.23.2:8000/api/volume/usb_control_enabled/true/,PinkNoise
+FAIL,http://172.23.23.2:8000/api/volume/mute/false/,PinkNoise
+FAIL,http://172.23.23.2:8000/api/volume/usb_control_enabled/false/,PinkNoise
+FAIL,http://172.23.23.2:8000/api/volume/mute/false/,PinkNoise
+FAIL,http://172.23.23.2:8000/api/calibration/mode/Pure%20Tone,PureTone
+FAIL,http://172.23.23.2:8000/api/calibration/mode/Pure%20Tone,PureTone
+SUCCESS,http://172.23.23.2:8000/api/volume/value/398,PureTone
+SUCCESS,http://172.23.23.2:8000/api/volume/value/398,PureTone
 TRYING,http://172.23.23.2:8000/api/volume/usb_control_enabled/true/, 

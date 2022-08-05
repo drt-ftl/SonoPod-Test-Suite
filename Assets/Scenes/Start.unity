@@ -548,6 +548,17 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 23de7f4925200d9419836ef56af4ef33, type: 3}
   - {fileID: 8300000, guid: 0d180c0629f641f4f9845c20b7ed3e27, type: 3}
   - {fileID: 8300000, guid: 8b4ceac10f8dd944ea9671869a545d63, type: 3}
+  PulsedWarbleClips:
+  - {fileID: 8300000, guid: fcc9c7f9d7beac0478a470db78cef2b8, type: 3}
+  - {fileID: 8300000, guid: 369a5e0a85b16214da07df37ad102d47, type: 3}
+  - {fileID: 8300000, guid: 013e8f35095b0504a8e945baaffc701e, type: 3}
+  - {fileID: 8300000, guid: 7d53147eb07867c46963145d6236d433, type: 3}
+  - {fileID: 8300000, guid: 8acaeccc8fc74b9419d619490048b689, type: 3}
+  - {fileID: 8300000, guid: 5297b530ceefb24498f49cc74b2257b3, type: 3}
+  - {fileID: 8300000, guid: fcb23ac03d7b36341bf23458e51b4b0f, type: 3}
+  - {fileID: 8300000, guid: d73b5aee7f5bf71498f1ed72dfc65f70, type: 3}
+  - {fileID: 8300000, guid: ea8d4e7b8c58a06429dc0cb268fd0e10, type: 3}
+  - {fileID: 8300000, guid: 2f9d832e463628444aa8d2e271ef14ca, type: 3}
   PureToneClips:
   - {fileID: 8300000, guid: c7c823275215a974988d7e42643d781e, type: 3}
   - {fileID: 8300000, guid: a1a6e32fb9d6c0e41b6bb9e3c36ee9b3, type: 3}
@@ -864,6 +875,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9cfc45a3d2014dd45bcaab4a38d03ec8, type: 3}
   CrowdClips:
   - {fileID: 8300000, guid: 0b87977ef695bd54aabc5494df73f761, type: 3}
+  FREE_BG_Clips:
+  - {fileID: 8300000, guid: 5a5afb99b6e83024c9a33364e85f190f, type: 3}
   crowdNoise: {fileID: 8300000, guid: d9c8e09bb03890e46b6f2da1b7aed92b, type: 3}
   PN_Test: {fileID: 8300000, guid: e548cd2ba4c65d245b4b824e79e68f99, type: 3}
   PT_Test: {fileID: 8300000, guid: 795342da798c9164c9a781d332fe1a84, type: 3}

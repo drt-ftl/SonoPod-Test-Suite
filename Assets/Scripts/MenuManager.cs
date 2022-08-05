@@ -29,6 +29,11 @@ public class MenuManager : MonoBehaviour
         SonoLoopManager.instance.TestType = SonoLoopManager.SonoLoopTestType.HearingThreshold_WT;
         SceneManager.LoadScene("Test");
     }
+    public void Do_PulsedWarble()
+    {
+        SonoLoopManager.instance.TestType = SonoLoopManager.SonoLoopTestType.PulsedWarble;
+        SceneManager.LoadScene("Test");
+    }
     public void Do_SpeechReceptionThreshold()
     {
         SonoLoopManager.instance.TestType = SonoLoopManager.SonoLoopTestType.SpeechReceptionThreshold;

@@ -33,6 +33,7 @@ public class SpeakerManager : MonoBehaviour
         switch (SonoLoopManager.instance.TestType)
         {
             case SonoLoopManager.SonoLoopTestType.HearingThreshold_WT:
+            case SonoLoopManager.SonoLoopTestType.PulsedWarble:
             case SonoLoopManager.SonoLoopTestType.HearingThreshold_PT:
             case SonoLoopManager.SonoLoopTestType.SpeechReceptionThreshold:
             case SonoLoopManager.SonoLoopTestType.FreeFieldLocalization:
@@ -47,8 +48,10 @@ public class SpeakerManager : MonoBehaviour
                 if (RingIndex == 0) v = 1f;
                 else v = 0;
                 break;
-            case SonoLoopManager.SonoLoopTestType.Free:
             case SonoLoopManager.SonoLoopTestType.HINT:
+                v = vol_std;
+                break;
+            case SonoLoopManager.SonoLoopTestType.Free:
                 v = vol_std;
                 break;
             default:
@@ -94,9 +97,12 @@ public class SpeakerManager : MonoBehaviour
     }
     public void StopPlaying()
     {
+        if (speakerManagerSource.loop) return;
+        Debug.Log("Stopping " + RingIndex.ToString());
         foreach (var speaker in Speakers)
         {
-            speaker.Value.audioSource.Stop();
+            if (!speaker.Value.audioSource.loop)
+                speaker.Value.audioSource.Stop();
         }
     }
     public void ChangeClip(int increment)
@@ -112,23 +118,6 @@ public class SpeakerManager : MonoBehaviour
             CurrentClipNumber = 0;
         ClipInQueue = true;
         RefreshSpeakers(Clips[CurrentClipNumber]);
-    }
-    public void ToggleSpeakers(bool _turnOn)
-    {
-        foreach (var speaker in Speakers)
-        {
-            if (!_turnOn)
-            {
-                speaker.Value.audioSource.volume = 0;
-            }
-            else
-            {
-
-                speaker.Value.audioSource.volume = SpeakerRingVolume;
-                speaker.Value.audioSource.loop = true;
-                speaker.Value.audioSource.Play();
-            }
-        }
     }
     public void PlayOnce_Event()
     {
@@ -191,7 +180,7 @@ public class SpeakerManager : MonoBehaviour
                     linearDiff *= -1f;
                     if (linearDiff < 0) linearDiff = 0;
                     if (linearDiff > 1) linearDiff = 1;
-                    v *= (1 - linearDiff);
+                    v *= (1 - linearDiff);                    
                 }
             }
             speaker.audioSource.volume = v;
@@ -237,7 +226,9 @@ public class SpeakerManager : MonoBehaviour
         foreach (var speaker in Speakers.Values)
         {
             if (speaker.audioSource == null || speakerManagerSource == null) return;
-            speaker.audioSource.Stop();
+
+            if (!speakerManagerSource.loop)
+                speaker.audioSource.Stop();
             int outputChannel = SonoLoopManager.instance.getIndexFromPosition(speaker.Position);
             AudioClip newClip = AudioClip.Create(clip.name, clip.samples, 8, clip.frequency, false);
             float[] newAudioData = new float[clip.samples * 8];
